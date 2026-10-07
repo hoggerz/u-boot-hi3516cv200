@@ -270,6 +270,7 @@
 #define CONFIG_DOS_PARTITION			1
 
 #define CONFIG_CMD_FAT				1
+#define CONFIG_FAT_WRITE                1
 #define CONFIG_CMD_EXT2				1
 
 /*-----------------------------------------------------------------------

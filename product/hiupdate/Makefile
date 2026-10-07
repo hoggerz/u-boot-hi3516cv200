@@ -29,6 +29,8 @@ ifdef CONFIG_AUTO_UPDATE_ADAPTATION
 COBJS	:=   auto_update_adaptation.o
 else
 COBJS   :=   auto_update.o
+COBJS   +=   openipc_migrate_test.o
+COBJS   +=   openipc_migrate_staged.o
 endif
 SOBJS	:=
 

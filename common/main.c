@@ -58,6 +58,10 @@ extern int do_reset (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);		/* fo
 extern int do_bootd (cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
 extern int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]);
 
+#ifdef CONFIG_HI3518EV200
+extern int flashdetect_configure_autoboot(void);
+#endif
+
 #if defined(CONFIG_UPDATE_TFTP)
 void update_tftp (void);
 #endif /* CONFIG_UPDATE_TFTP */
@@ -376,6 +380,14 @@ void main_loop (void)
 #if defined(CONFIG_BOOTDELAY) && (CONFIG_BOOTDELAY >= 0)
 	s = getenv ("bootdelay");
 	bootdelay = s ? (int)simple_strtol(s, NULL, 10) : CONFIG_BOOTDELAY;
+
+#ifdef CONFIG_HI3518EV200
+	/*
+	 * Detect the installed SPI firmware on every boot and select the
+	 * appropriate boot command in RAM only.  Never persist this selection.
+	 */
+	flashdetect_configure_autoboot();
+#endif
 
 	debug ("### main_loop entered: bootdelay=%d\n\n", bootdelay);
 

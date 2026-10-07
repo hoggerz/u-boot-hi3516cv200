@@ -31,6 +31,11 @@
 
 #define CONFIG_SUPPORT_VFAT
 
+/* FAT write compatibility from upstream U-Boot 2012 */
+#define VFAT_MAXLEN_BYTES    256
+#define VFAT_MAXSEQ          9
+#define PREFETCH_BLOCKS      2
+
 #define SECTOR_SIZE FS_BLOCK_SIZE
 
 #define FS_BLOCK_SIZE 512
@@ -108,6 +113,8 @@
 #endif
 
 #define TOLOWER(c)	if((c) >= 'A' && (c) <= 'Z'){(c)+=('a' - 'A');}
+#define TOUPPER(c)     if ((c) >= 'a' && (c) <= 'z') \
+                                (c) -= ('a' - 'A');
 #define START(dent)	(FAT2CPU16((dent)->start) \
 			+ (mydata->fatsize != 32 ? 0 : \
 			  (FAT2CPU16((dent)->starthi) << 16)))
@@ -188,6 +195,7 @@ typedef struct {
 	__u16	fat_sect;	/* Starting sector of the FAT */
 	__u32	rootdir_sect;	/* Start sector of root directory */
 	__u16	clust_size;	/* Size of clusters in sectors */
+        __u16   sect_size;      /* Bytes per sector */
 	int	data_begin;/* The sector of the first cluster, can be negative*/
 	int	fatbufnum;	/* Used by get_fatent, init to -1 */
 } fsdata;
@@ -216,5 +224,6 @@ int file_fat_ls(const char *dir);
 long file_fat_read(const char *filename, void *buffer, unsigned long maxsize);
 const char *file_getfsname(int idx);
 int fat_register_device(block_dev_desc_t *dev_desc, int part_no);
+int file_fat_write(const char *filename, void *buffer, unsigned long maxsize);
 
 #endif /* _FAT_H_ */
