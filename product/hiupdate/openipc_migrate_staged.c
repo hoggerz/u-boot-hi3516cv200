@@ -16,6 +16,11 @@
 #include <malloc.h>
 #include <spi_flash.h>
 
+extern int spi_flash_erase_op(struct spi_flash *flash,
+	unsigned long offset, unsigned long len);
+extern int spi_flash_write_op(struct spi_flash *flash,
+	unsigned long offset, unsigned long len, void *buf);
+
 #define MIG_REAL_WRITES_ENABLED	0
 
 #define MIG_ARM_MARKER		"MIGARM.CFG"
@@ -310,7 +315,7 @@ static int mig_program_loaded(struct spi_flash *flash, unsigned long off,
 	}
 
 	printf("MIGRATE: erase 0x%08lx .. 0x%08lx\n", off, off + len - 1);
-	if (spi_flash_erase(flash, off, len)) {
+	if (spi_flash_erase_op(flash, off, len)) {
 		printf("MIGRATE: erase failed\n");
 		return -1;
 	}
@@ -320,7 +325,7 @@ static int mig_program_loaded(struct spi_flash *flash, unsigned long off,
 		if (chunk > MIG_VERIFY_CHUNK)
 			chunk = MIG_VERIFY_CHUNK;
 
-		if (spi_flash_write(flash, off + done, chunk,
+		if (spi_flash_write_op(flash, off + done, chunk,
 			MIG_LOAD_ADDR + done)) {
 			printf("MIGRATE: write failed at 0x%08lx\n", off + done);
 			return -1;
@@ -393,7 +398,7 @@ static int mig_erase_verify_ff(struct spi_flash *flash, unsigned long off,
 
 	printf("MIGRATE: erase rootfs_data 0x%08lx .. 0x%08lx\n",
 		off, off + len - 1);
-	if (spi_flash_erase(flash, off, len)) {
+	if (spi_flash_erase_op(flash, off, len)) {
 		printf("MIGRATE: rootfs_data erase failed\n");
 		return -1;
 	}
