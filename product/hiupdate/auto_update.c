@@ -270,7 +270,7 @@ static void schedule_notify(unsigned long offset, unsigned long len,
 	} while (0);
 }
 
-static int spi_flash_erase_op(struct spi_flash *flash, unsigned long offset,
+int spi_flash_erase_op(struct spi_flash *flash, unsigned long offset,
 		unsigned long len)
 {
 	int ret;
@@ -298,7 +298,7 @@ static int spi_flash_erase_op(struct spi_flash *flash, unsigned long offset,
 	return ret;
 }
 
-static int spi_flash_write_op(struct spi_flash *flash, unsigned long offset,
+int spi_flash_write_op(struct spi_flash *flash, unsigned long offset,
 		unsigned long len, void *buf)
 {
 	int ret = 0;
